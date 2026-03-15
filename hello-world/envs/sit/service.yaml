@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-app
+  namespace: sit
+spec:
+  type: NodePort
+  selector:
+    app: hello-app
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30001   # SIT: access via localhost:30001

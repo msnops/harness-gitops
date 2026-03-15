@@ -15,9 +15,9 @@ spec:
     spec:
       containers:
         - name: hello-app
-          image: ghcr.io/<your-github-username>/hello-app:v1.0
+          image: nginxdemos/hello:0.2
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           env:
             - name: APP_VERSION
               value: "v1.0"
