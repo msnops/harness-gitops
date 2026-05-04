@@ -1,0 +1,19 @@
+# Exposes the Traefik dashboard at traefik.internal via the traefik IngressClass.
+# In prod, protect this with middleware (BasicAuth or IP whitelist) before exposing.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik
+  labels:
+    environment: prod
+    app.kubernetes.io/managed-by: harness-gitops
+spec:
+  entryPoints:
+    - traefik
+  routes:
+    - match: Host(`traefik.internal`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService

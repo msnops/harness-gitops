@@ -1,0 +1,26 @@
+# kustomize/overlays/prod/kustomization.yaml
+# Prod: Traefik, 3 replicas, HPA, PDB, dashboard enabled, hard anti-affinity
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: traefik
+
+# Points at the Traefik base — completely separate from ingress-nginx
+bases:
+  - ../../base/traefik
+
+commonLabels:
+  environment: prod
+
+patches:
+  - path: patch-helm-values.yaml
+    target:
+      kind: ConfigMap
+      name: traefik-helm-values
+
+resources:
+  - traefik-values.yaml
+  - hpa.yaml
+  - pdb.yaml
+  - dashboard-ingress.yaml

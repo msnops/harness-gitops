@@ -1,0 +1,10 @@
+environment:
+  name: uat
+  identifier: uat
+  type: PreProduction
+  orgIdentifier: default
+  projectIdentifier: nginx_gitops
+  tags:
+    env: uat
+    ingress: nginx
+    managed-by: harness-gitops

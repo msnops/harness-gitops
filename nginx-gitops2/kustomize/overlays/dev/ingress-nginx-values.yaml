@@ -1,0 +1,40 @@
+# kustomize/overlays/dev/ingress-nginx-values.yaml
+# These are the actual Helm values ArgoCD passes to the ingress-nginx chart
+# for the DEV environment. ArgoCD reads this file via spec.source.helm.valuesObject
+# in the Harness GitOps Application manifest.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-nginx-argocd-values
+  namespace: ingress-nginx
+  annotations:
+    # ArgoCD reads this annotation to inject as Helm values
+    argocd.argoproj.io/helm-values: "true"
+data:
+  values.yaml: |
+    ingress-nginx:
+      controller:
+        replicaCount: 1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 300m
+            memory: 256Mi
+        service:
+          type: LoadBalancer
+          annotations:
+            service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+            service.beta.kubernetes.io/aws-load-balancer-type: nlb
+        metrics:
+          enabled: true
+          serviceMonitor:
+            enabled: false
+        autoscaling:
+          enabled: false
+        config:
+          use-forwarded-headers: "true"
+      defaultBackend:
+        enabled: true

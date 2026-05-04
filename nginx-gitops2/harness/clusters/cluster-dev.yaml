@@ -1,0 +1,17 @@
+gitOpsCluster:
+  name: eks-dev
+  identifier: eks_dev
+  orgIdentifier: default
+  projectIdentifier: nginx_gitops
+  envRef: dev
+  agentIdentifier: gitops_agent_dev
+  tags:
+    env: dev
+    managed-by: harness-gitops
+  request:
+    upsert: true
+    cluster:
+      name: eks-dev
+      server: https://kubernetes.default.svc
+      config:
+        clusterConnectionType: IN_CLUSTER

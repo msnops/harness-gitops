@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-nginx-argocd-values
+  namespace: ingress-nginx
+  annotations:
+    argocd.argoproj.io/helm-values: "true"
+data:
+  values.yaml: |
+    ingress-nginx:
+      controller:
+        replicaCount: 2
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        service:
+          type: LoadBalancer
+          externalTrafficPolicy: Local
+          annotations:
+            service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+            service.beta.kubernetes.io/aws-load-balancer-type: nlb
+        metrics:
+          enabled: true
+          serviceMonitor:
+            enabled: false
+        autoscaling:
+          enabled: false
+        config:
+          use-forwarded-headers: "true"
+      defaultBackend:
+        enabled: true

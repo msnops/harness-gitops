@@ -1,0 +1,48 @@
+application:
+  name: traefik-prod
+  identifier: traefik_prod
+  orgIdentifier: default
+  projectIdentifier: nginx_gitops
+  agentIdentifier: gitops_agent_prod
+  clusterIdentifier: eks_prod
+  repoIdentifier: nginx_gitops_repo
+  description: Traefik ingress for Prod via Kustomize overlay — HPA and PDB enabled
+  tags:
+    env: prod
+    ingress: traefik
+
+  spec:
+    source:
+      repoURL: https://github.com/your-org/nginx-gitops   # update
+      targetRevision: HEAD
+      path: kustomize/overlays/prod
+
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: traefik
+
+    syncPolicy:
+      automated:
+        prune: true
+        # selfHeal false in Prod — manual sync prevents racing with HPA
+        selfHeal: false
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
+        - RespectIgnoreDifferences=true
+      retry:
+        limit: 5
+        backoff:
+          duration: 10s
+          factor: 2
+          maxDuration: 3m
+
+    ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+          - /spec/replicas      # HPA manages this
+      - group: autoscaling
+        kind: HorizontalPodAutoscaler
+        jsonPointers:
+          - /spec/metrics       # live autoscaler state

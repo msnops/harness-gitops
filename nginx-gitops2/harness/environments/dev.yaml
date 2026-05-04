@@ -1,0 +1,10 @@
+environment:
+  name: dev
+  identifier: dev
+  type: PreProduction
+  orgIdentifier: default
+  projectIdentifier: nginx_gitops
+  tags:
+    env: dev
+    ingress: nginx
+    managed-by: harness-gitops

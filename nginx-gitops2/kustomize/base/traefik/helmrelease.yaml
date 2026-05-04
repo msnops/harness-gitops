@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-helm-values
+  namespace: traefik
+  labels:
+    app.kubernetes.io/component: helm-values
+data:
+  replicaCount: "1"
+  serviceType: "LoadBalancer"
+  metricsEnabled: "true"
+  dashboardEnabled: "false"
+  cpuRequest: "100m"
+  memoryRequest: "128Mi"
+  cpuLimit: "500m"
+  memoryLimit: "512Mi"
+  autoscalingEnabled: "false"
+  podDisruptionBudgetEnabled: "false"
+  serviceMonitorEnabled: "false"
+  logLevel: "INFO"
+  accessLogsEnabled: "true"

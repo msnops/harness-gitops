@@ -1,0 +1,22 @@
+# kustomize/overlays/uat/kustomization.yaml
+# UAT: ingress-nginx, prod-like resources, ServiceMonitor enabled
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ingress-nginx
+
+bases:
+  - ../../base/ingress-nginx
+
+commonLabels:
+  environment: uat
+
+patches:
+  - path: patch-helm-values.yaml
+    target:
+      kind: ConfigMap
+      name: ingress-nginx-helm-values
+
+resources:
+  - ingress-nginx-values.yaml

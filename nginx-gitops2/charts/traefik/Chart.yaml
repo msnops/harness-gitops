@@ -1,0 +1,10 @@
+apiVersion: v2
+name: traefik
+description: Traefik ingress controller for Prod — free, no licence required
+type: application
+version: 1.0.0
+appVersion: "26.1.0"
+dependencies:
+  - name: traefik
+    version: "26.1.0"
+    repository: "https://traefik.github.io/charts"

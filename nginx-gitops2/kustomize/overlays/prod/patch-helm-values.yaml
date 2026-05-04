@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-helm-values
+  namespace: traefik
+data:
+  replicaCount: "3"
+  cpuRequest: "500m"
+  memoryRequest: "512Mi"
+  cpuLimit: "2000m"
+  memoryLimit: "2Gi"
+  autoscalingEnabled: "true"
+  podDisruptionBudgetEnabled: "true"
+  serviceMonitorEnabled: "true"
+  dashboardEnabled: "true"
+  logLevel: "WARN"

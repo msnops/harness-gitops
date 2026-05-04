@@ -1,0 +1,44 @@
+application:
+  name: nginx-ingress-dev
+  identifier: nginx_ingress_dev
+  orgIdentifier: default
+  projectIdentifier: nginx_gitops
+  agentIdentifier: gitops_agent_dev
+  clusterIdentifier: eks_dev
+  repoIdentifier: nginx_gitops_repo
+  description: ingress-nginx for DEV via Kustomize overlay
+  tags:
+    env: dev
+    ingress: nginx
+
+  spec:
+    source:
+      repoURL: https://github.com/your-org/nginx-gitops   # update
+      targetRevision: HEAD
+      # Point ArgoCD at the Kustomize overlay directory, not the Helm chart directly.
+      # ArgoCD detects kustomization.yaml and runs `kustomize build` automatically.
+      path: kustomize/overlays/dev
+
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: ingress-nginx
+
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
+      retry:
+        limit: 3
+        backoff:
+          duration: 5s
+          factor: 2
+          maxDuration: 1m
+
+    ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+          - /spec/replicas

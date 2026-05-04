@@ -1,0 +1,22 @@
+# kustomize/overlays/sit/kustomization.yaml
+# SIT: ingress-nginx, 2 replicas, internal NLB
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ingress-nginx
+
+bases:
+  - ../../base/ingress-nginx
+
+commonLabels:
+  environment: sit
+
+patches:
+  - path: patch-helm-values.yaml
+    target:
+      kind: ConfigMap
+      name: ingress-nginx-helm-values
+
+resources:
+  - ingress-nginx-values.yaml

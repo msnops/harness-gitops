@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: traefik
+  namespace: traefik
+  labels:
+    environment: prod
+    app.kubernetes.io/managed-by: harness-gitops
+spec:
+  # Minimum 2 pods must remain available during node drains and rolling updates
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: traefik

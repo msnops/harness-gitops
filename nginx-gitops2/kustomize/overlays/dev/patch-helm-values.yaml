@@ -1,0 +1,14 @@
+# Strategic merge patch — only keys listed here are changed; base keeps the rest.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-nginx-helm-values
+  namespace: ingress-nginx
+data:
+  replicaCount: "1"
+  cpuRequest: "100m"
+  memoryRequest: "128Mi"
+  cpuLimit: "300m"
+  memoryLimit: "256Mi"
+  autoscalingEnabled: "false"
+  serviceMonitorEnabled: "false"

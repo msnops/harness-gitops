@@ -1,0 +1,79 @@
+# Base default values for Traefik ingress controller.
+# Environment-specific config patched via kustomize/overlays/prod/
+
+traefik:
+  replicaCount: 1
+
+  image:
+    repository: traefik
+    tag: "v2.11.2"
+    pullPolicy: IfNotPresent
+
+  deployment:
+    replicas: 1
+
+  # Traefik entry points
+  ports:
+    web:
+      port: 8000
+      expose:
+        default: true
+      exposedPort: 80
+      protocol: TCP
+    websecure:
+      port: 8443
+      expose:
+        default: true
+      exposedPort: 443
+      protocol: TCP
+      tls:
+        enabled: true
+    traefik:
+      port: 9000
+      expose:
+        default: false     # dashboard port — not exposed externally by default
+
+  service:
+    type: LoadBalancer
+    annotations: {}
+    externalTrafficPolicy: Local
+
+  # Traefik dashboard — enabled in prod overlay
+  ingressRoute:
+    dashboard:
+      enabled: false
+
+  providers:
+    kubernetesCRD:
+      enabled: true
+      allowCrossNamespace: true
+    kubernetesIngress:
+      enabled: true
+      publishedService:
+        enabled: true
+
+  logs:
+    general:
+      level: INFO
+    access:
+      enabled: true
+
+  metrics:
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: false
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  autoscaling:
+    enabled: false
+
+  podDisruptionBudget:
+    enabled: false

@@ -1,0 +1,42 @@
+application:
+  name: nginx-ingress-uat
+  identifier: nginx_ingress_uat
+  orgIdentifier: default
+  projectIdentifier: nginx_gitops
+  agentIdentifier: gitops_agent_uat
+  clusterIdentifier: eks_uat
+  repoIdentifier: nginx_gitops_repo
+  description: ingress-nginx for UAT via Kustomize overlay
+  tags:
+    env: uat
+    ingress: nginx
+
+  spec:
+    source:
+      repoURL: https://github.com/your-org/nginx-gitops   # update
+      targetRevision: HEAD
+      path: kustomize/overlays/uat
+
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: ingress-nginx
+
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
+      retry:
+        limit: 3
+        backoff:
+          duration: 5s
+          factor: 2
+          maxDuration: 1m
+
+    ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+          - /spec/replicas

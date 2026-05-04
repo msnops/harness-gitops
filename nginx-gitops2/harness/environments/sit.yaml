@@ -1,0 +1,10 @@
+environment:
+  name: sit
+  identifier: sit
+  type: PreProduction
+  orgIdentifier: default
+  projectIdentifier: nginx_gitops
+  tags:
+    env: sit
+    ingress: nginx
+    managed-by: harness-gitops

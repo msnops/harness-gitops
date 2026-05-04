@@ -1,0 +1,33 @@
+# kustomize/base/ingress-nginx/helmrelease.yaml
+# This is NOT a Flux HelmRelease CRD — it is a plain Kubernetes ConfigMap
+# that carries the Helm values for this base. Overlays use strategic merge
+# patches to override specific keys before ArgoCD renders the Helm chart.
+#
+# ArgoCD + Kustomize + Helm works as follows:
+#   1. ArgoCD runs `kustomize build overlays/<env>`
+#   2. Kustomize merges base + overlay patches into final manifests
+#   3. ArgoCD applies the result to the cluster
+#
+# For Helm value injection via Kustomize we use a values ConfigMap pattern
+# combined with ArgoCD's `spec.source.helm.valuesObject` override in the
+# Application manifest (see harness/gitops-apps/).
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-nginx-helm-values
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/component: helm-values
+data:
+  # Base values applied across all ingress-nginx environments.
+  # Overlays patch the keys they need to change.
+  replicaCount: "1"
+  serviceType: "LoadBalancer"
+  metricsEnabled: "true"
+  cpuRequest: "100m"
+  memoryRequest: "128Mi"
+  cpuLimit: "500m"
+  memoryLimit: "512Mi"
+  autoscalingEnabled: "false"
+  serviceMonitorEnabled: "false"

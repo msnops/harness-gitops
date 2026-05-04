@@ -1,0 +1,25 @@
+# kustomize/overlays/dev/kustomization.yaml
+# DEV: ingress-nginx, minimal resources, 1 replica, internet-facing NLB
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ingress-nginx
+
+# Point at the ingress-nginx base
+bases:
+  - ../../base/ingress-nginx
+
+commonLabels:
+  environment: dev
+
+# Patch the helm-values ConfigMap to set DEV-specific values
+patches:
+  - path: patch-helm-values.yaml
+    target:
+      kind: ConfigMap
+      name: ingress-nginx-helm-values
+
+# Additional DEV-only resources
+resources:
+  - ingress-nginx-values.yaml

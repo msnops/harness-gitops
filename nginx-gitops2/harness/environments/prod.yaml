@@ -1,0 +1,10 @@
+environment:
+  name: prod
+  identifier: prod
+  type: Production
+  orgIdentifier: default
+  projectIdentifier: nginx_gitops
+  tags:
+    env: prod
+    ingress: traefik
+    managed-by: harness-gitops
